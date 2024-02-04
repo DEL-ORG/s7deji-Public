@@ -1,0 +1,147 @@
+version: '3'
+
+services:
+  yelb-ui:
+    image: mreferre/yelb-ui:0.7
+    container_name: yelb-ui
+    networks:
+      - yelb-net
+    ports:
+      - "8080:8081"
+    expose:
+      - "80"
+    depends_on:
+      - yelb-appserver
+
+  yelb-appserver:
+    image: mreferre/yelb-appserver:0.5
+    container_name: yelb-appserver
+    networks:
+      - yelb-net
+    depends_on:
+      - redis-server
+      - odilia-redis01
+      - odilia-redis02
+
+  redis-server:
+    image: redis:4.0.2
+    container_name: redis-server
+    volumes:
+      - ./redis/redis-server.conf:/etc/redis/redis.conf
+      - redis-server-data:/data
+
+    networks:
+      - yelb-net
+    depends_on:
+      - odilia-redis-sentinel01
+      - odilia-redis-sentinel02
+      - odilia-redis-sentinel03
+      - odilia-redis01
+      - odilia-redis02
+
+  odilia-redis01:
+    image: redis:4.0.2
+    container_name: odilia-redis01
+    volumes:
+      - ./redis/redis-server.conf:/etc/redis/redis.conf
+      - odilia-redis01-data:/data
+    networks:
+      - yelb-net
+
+  odilia-redis02:
+    image: redis:4.0.2
+    container_name: odilia-redis02
+    volumes:
+      - ./redis/redis-server.conf:/etc/redis/redis.conf
+      - odilia-redis02-data:/data
+    networks:
+      - yelb-net
+
+  odilia-redis-sentinel01:
+    image: redis:4.0.2
+    container_name: odilia-redis-sentinel01
+    volumes:
+      - ./redis/sentinel.conf:/etc/redis/sentinel.conf
+      - odilia-redis-sentinel01-data:/data
+    networks:
+      - yelb-net
+
+  odilia-redis-sentinel02:
+    image: redis:4.0.2
+    container_name: odilia-redis-sentinel02
+    volumes:
+      - ./redis/sentinel.conf:/etc/redis/sentinel.conf
+      - odilia-redis-sentinel02-data:/data
+    networks:
+      - yelb-net
+
+  odilia-redis-sentinel03:
+    image: redis:4.0.2
+    container_name: odilia-redis-sentinel03
+    volumes:
+      - ./redis/sentinel.conf:/etc/redis/sentinel.conf
+      - odilia-redis-sentinel03-data:/data
+    networks:
+      - yelb-net
+
+  yelb-db:
+    image: mreferre/yelb-db:0.5
+    container_name: yelb-db
+    networks:
+      - yelb-net
+    volumes:
+      - yelb-db-data:/var/lib/postgresql/data
+    depends_on:
+      - odilia-db-replication01
+      - odilia-db-replication02
+      - odilia-db-replication03
+
+  odilia-db-replication01:
+    image: mreferre/yelb-db:0.5
+    container_name: odilia-db-replication01
+    networks:
+      - yelb-net
+    volumes:
+      - odilia-db-replication01-data:/var/lib/postgresql/data
+
+  odilia-db-replication02:
+    image: mreferre/yelb-db:0.5
+    container_name: odilia-db-replication02
+    networks:
+      - yelb-net
+    volumes:
+      - odilia-db-replication02-data:/var/lib/postgresql/data
+
+  odilia-db-replication03:
+    image: mreferre/yelb-db:0.5
+    container_name: odilia-db-replication03
+    networks:
+      - yelb-net
+    volumes:
+      - odilia-db-replication03-data:/var/lib/postgresql/data
+
+networks:
+  yelb-net:
+    driver: bridge
+
+volumes:
+  yelb-db-data:
+    driver: local
+  redis-server-data:
+    driver: local
+  odilia-redis01-data:
+    driver: local
+  odilia-redis02-data:
+    driver: local
+  odilia-redis-sentinel01-data:
+    driver: local
+  odilia-redis-sentinel02-data:
+    driver: local
+  odilia-redis-sentinel03-data:
+    driver: local
+  odilia-db-replication01-data:
+    driver: local
+  odilia-db-replication02-data:
+    driver: local
+  odilia-db-replication03-data:
+    driver: local

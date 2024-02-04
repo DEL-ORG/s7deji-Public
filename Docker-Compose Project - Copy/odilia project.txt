@@ -1,0 +1,34 @@
+Services add container names;
+yelb-ui
+yelb-appserver
+redis-server
+odilia-redis01
+odilia-redis02
+odilia-redis-sentinel01
+odilia-redis-sentinel02
+odilia-redis-sentinel03
+yelb-db
+odilia-db-replication01
+odilia-db-replication02
+odilia-db-replication03
+
+images;
+mreferre/yelb-ui:0.7
+mreferre/yelb-appserver:0.5
+mreferre/yelb-db:0.5
+redis and sentinels use same image; redis:4.0.2
+
+
+mount under /etc/redis/redis.conf for; redis-server, odilia-redis01 and odilia-redis02
+
+mount under /etc/redis/sentinel.conf for; odilia-redis-sentinel01, odilia-redis-sentinel02 and odilia-redis-sentinel03.
+
+All volume driver should be set to; local
+
+All network driver should be set to; bridge
+
+expose 80 yeld-ui
+
+start redis replication with following command; redis-server /etc/redis/redis.conf
+
+start sentinel with following command; redis-sentinel /etc/redis/sentinel.conf
