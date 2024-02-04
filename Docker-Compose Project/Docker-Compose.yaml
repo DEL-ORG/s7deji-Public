@@ -50,6 +50,7 @@ services:
       - APIKEY=ecbc396f46mshb65cbb1f82cf334p1fcc87jsna5e962a3c542
     expose:
       - 5000
+      - 8080
     ports:
       - 5000:5000
     depends_on:
