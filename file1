@@ -1,1 +1,9 @@
-First note
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ include "expresso-shop-reviews.fullname" . }}
+spec:
+  maxUnavailable: 1
+  selector:
+    matchLabels:
+      app: {{- include "expresso-shop-reviews.selectorLabels_01" . | nindent 6 }}
