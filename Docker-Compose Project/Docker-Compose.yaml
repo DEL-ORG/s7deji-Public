@@ -57,7 +57,7 @@ services:
       - auth
     networks:
       - tarzan
-    restart: always
+  
     volumes:
       - data_redis:/data
   # UI Service
