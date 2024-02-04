@@ -24,7 +24,7 @@ services:
       - DB_HOST=db
       - DB_PASSWORD=my-secret-pw
     networks:
-      - tarzan
+      
     restart: always
     depends_on:
       - ui
