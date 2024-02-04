@@ -57,7 +57,8 @@ services:
     networks:
       - tarzan
     restart: always
-
+    volumes:
+      - data_redis:/data
   # UI Service
   ui:
     container_name: ui
